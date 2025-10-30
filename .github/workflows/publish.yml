@@ -3,6 +3,9 @@
 
 name: Publish
 
+permissions:
+  contents: read
+
 on:
   release:
     types: [created]
