@@ -1,7 +1,7 @@
 from auditpol.subcategories import Subcategory
 
 
-class _Setting():
+class _Setting:
     def __init__(self, *, machine_name):
         self.machine_name = machine_name
 
@@ -14,12 +14,12 @@ class _Setting():
         if isinstance(machine_name, str):
             self._machine_name = machine_name
         else:
-            raise TypeError(f'invalid type for machine_name: {type(machine_name)}')
+            raise TypeError(f"invalid type for machine_name: {type(machine_name)}")
 
 
-class SettingValue():
+class SettingValue:
     _value = ((False, False), (True, False), (False, True), (True, True))
-    _value_text = ('No Auditing', 'Success', 'Failure', 'Success and Failure')
+    _value_text = ("No Auditing", "Success", "Failure", "Success and Failure")
 
     def __init__(self, *, success=False, failure=False):
         self.success = success
@@ -40,7 +40,7 @@ class SettingValue():
         if isinstance(success, bool):
             self._success = success
         else:
-            raise TypeError(f'invalid type for success: {type(success)}')
+            raise TypeError(f"invalid type for success: {type(success)}")
 
     @property
     def failure(self):
@@ -51,7 +51,7 @@ class SettingValue():
         if isinstance(failure, bool):
             self._failure = failure
         else:
-            raise TypeError(f'invalid type for failure: {type(failure)}')
+            raise TypeError(f"invalid type for failure: {type(failure)}")
 
     @classmethod
     def from_value(cls, value):
@@ -65,7 +65,7 @@ class SettingValue():
 
 
 class SubcategorySetting(_Setting):
-    def __init__(self, *, machine_name='', subcategory, inclusion_setting):
+    def __init__(self, *, machine_name="", subcategory, inclusion_setting):
         super(SubcategorySetting, self).__init__(machine_name=machine_name)
         self.subcategory = subcategory
         self.inclusion_setting = inclusion_setting
@@ -79,7 +79,7 @@ class SubcategorySetting(_Setting):
         if isinstance(subcategory, Subcategory):
             self._subcategory = subcategory
         else:
-            raise TypeError(f'invalid type for subcategory: {type(subcategory)}')
+            raise TypeError(f"invalid type for subcategory: {type(subcategory)}")
 
     @property
     def inclusion_setting(self):
@@ -90,7 +90,9 @@ class SubcategorySetting(_Setting):
         if isinstance(inclusion_setting, SettingValue):
             self._inclusion_setting = inclusion_setting
         else:
-            raise TypeError(f'invalid type for inclusion_setting: {type(inclusion_setting)}')
+            raise TypeError(
+                f"invalid type for inclusion_setting: {type(inclusion_setting)}"
+            )
 
     @property
     def value(self):
@@ -98,28 +100,24 @@ class SubcategorySetting(_Setting):
 
     @classmethod
     def from_csv(cls, row):
-        machine_name, _, name, id, inclusion_value_text, _, _ = row.split(',')
+        machine_name, _, name, id, inclusion_value_text, _, _ = row.split(",")
 
         inclusion_setting = SettingValue.from_value_text(inclusion_value_text)
 
         return cls(
             machine_name=machine_name,
-            subcategory=Subcategory(
-                id=id,
-                name=name
-            ),
-            inclusion_setting=inclusion_setting
+            subcategory=Subcategory(id=id, name=name),
+            inclusion_setting=inclusion_setting,
         )
-
 
     def to_csv(self):
         return (
-            f'{self.machine_name},System,{self.subcategory.name},{self.subcategory.id},'
-            f'{str(self.inclusion_setting)},,{self.value}\n'
+            f"{self.machine_name},System,{self.subcategory.name},{self.subcategory.id},"
+            f"{str(self.inclusion_setting)},,{self.value}\n"
         )
 
 
-class OptionValue():
+class OptionValue:
     def __init__(self, *, enabled=False):
         self.enabled = enabled
 
@@ -127,7 +125,7 @@ class OptionValue():
         return self._value
 
     def __str__(self):
-        return ('Disabled', 'Enabled')[int(self)]
+        return ("Disabled", "Enabled")[int(self)]
 
     @property
     def enabled(self):
@@ -138,7 +136,7 @@ class OptionValue():
         if isinstance(enabled, bool):
             self._value = int(enabled)
         else:
-            raise TypeError(f'invalid type for enabled: {type(enabled)}')
+            raise TypeError(f"invalid type for enabled: {type(enabled)}")
 
     @classmethod
     def from_value(cls, value):
@@ -146,7 +144,7 @@ class OptionValue():
 
 
 class AuditOption(_Setting):
-    def __init__(self, *, machine_name='', type, value):
+    def __init__(self, *, machine_name="", type, value):
         super(AuditOption, self).__init__(machine_name=machine_name)
         self.type = type
         self.value = value
@@ -160,7 +158,7 @@ class AuditOption(_Setting):
         if isinstance(type, str):
             self._type = type
         else:
-            raise TypeError(f'invalid type for type: {type(type)}')
+            raise TypeError(f"invalid type for type: {type(type)}")
 
     @property
     def value(self):
@@ -171,25 +169,23 @@ class AuditOption(_Setting):
         if isinstance(value, OptionValue):
             self._value = value
         else:
-            raise TypeError(f'invalid type for value: {type(value)}')
+            raise TypeError(f"invalid type for value: {type(value)}")
 
     @classmethod
     def from_csv(cls, row):
-        machine_name, _, option, _, _, _, value = row.split(',')
-        _, type = option.split(':')
+        machine_name, _, option, _, _, _, value = row.split(",")
+        _, type = option.split(":")
 
         return cls(
-            machine_name=machine_name,
-            type=type,
-            value=OptionValue.from_value(value)
+            machine_name=machine_name, type=type, value=OptionValue.from_value(value)
         )
 
     def to_csv(self):
-        return f'{self.machine_name},,Option:{self.type},,{str(self.value)},,{int(self.value)}\n'
+        return f"{self.machine_name},,Option:{self.type},,{str(self.value)},,{int(self.value)}\n"
 
 
 class GlobalObjectAccessAuditSetting(_Setting):
-    def __init__(self, *, machine_name='', type, sacl):
+    def __init__(self, *, machine_name="", type, sacl):
         super(GlobalObjectAccessAuditSetting, self).__init__(machine_name=machine_name)
         self.type = type
         self.sacl = sacl
@@ -203,7 +199,7 @@ class GlobalObjectAccessAuditSetting(_Setting):
         if isinstance(type, str):
             self._type = type
         else:
-            raise TypeError(f'invalid type for type: {type(type)}')
+            raise TypeError(f"invalid type for type: {type(type)}")
 
     @property
     def sacl(self):
@@ -214,17 +210,13 @@ class GlobalObjectAccessAuditSetting(_Setting):
         if isinstance(sacl, str):
             self._sacl = sacl
         else:
-            raise TypeError(f'invalid type for sacl: {type(sacl)}')
+            raise TypeError(f"invalid type for sacl: {type(sacl)}")
 
     @classmethod
     def from_csv(cls, row):
-        machine_name, _, type, _, _, _, sacl = row.split(',')
+        machine_name, _, type, _, _, _, sacl = row.split(",")
 
-        return cls(
-            machine_name=machine_name,
-            type=type,
-            sacl=sacl
-        )
+        return cls(machine_name=machine_name, type=type, sacl=sacl)
 
     def to_csv(self):
-        return f'{self.machine_name},,{self.type},,,,{self.sacl}\n'
+        return f"{self.machine_name},,{self.type},,,,{self.sacl}\n"

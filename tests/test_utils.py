@@ -1,6 +1,4 @@
 from unittest import TestCase
-from auditpol.policy import AuditPolicy
-from auditpol.utils import dump, load
 
 
 class TestUtils(TestCase):

@@ -1,0 +1,14 @@
+[project]
+name = "auditpol"
+version = "1.1.0"
+description = "Windows Audit Policy parser and emitter for Python"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest~=9.0",
+    "ruff~=0.0",
+    "ty~=0.0",
+]

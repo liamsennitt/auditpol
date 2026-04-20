@@ -1,5 +1,5 @@
-class Subcategory():
-    def __init__(self, *, id, name, description=''):
+class Subcategory:
+    def __init__(self, *, id, name, description=""):
         self.id = id
         self.name = name
         self.description = description
@@ -13,7 +13,7 @@ class Subcategory():
         if isinstance(id, str):
             self._id = id
         else:
-            raise TypeError(f'invalid type for id: {type(id)}')
+            raise TypeError(f"invalid type for id: {type(id)}")
 
     @property
     def name(self):
@@ -24,7 +24,7 @@ class Subcategory():
         if isinstance(name, str):
             self._name = name
         else:
-            raise TypeError(f'invalid type for name: {type(name)}')
+            raise TypeError(f"invalid type for name: {type(name)}")
 
     @property
     def description(self):
@@ -35,4 +35,4 @@ class Subcategory():
         if isinstance(description, str):
             self._description = description
         else:
-            raise TypeError(f'invalid type for description: {type(description)}')
+            raise TypeError(f"invalid type for description: {type(description)}")
