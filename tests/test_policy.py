@@ -1,12 +1,13 @@
 from unittest import TestCase
-from auditpol.subcategories import Subcategory
+
+from auditpol.policy import AuditPolicy
 from auditpol.settings import (
-    SettingValue,
-    SubcategorySetting,
     AuditOption,
     GlobalObjectAccessAuditSetting,
+    SettingValue,
+    SubcategorySetting,
 )
-from auditpol.policy import AuditPolicy
+from auditpol.subcategories import Subcategory
 
 
 class TestAuditPolicy(TestCase):
@@ -23,24 +24,20 @@ class TestAuditPolicy(TestCase):
             AuditPolicy(settings=None)
 
     def test_valid_settings_element(self):
-        subcategory = Subcategory(
-            id="{00000000-0000-0000-0000-000000000000}", name="Example"
-        )
+        subcategory = Subcategory(id="{00000000-0000-0000-0000-000000000000}", name="Example")
         inclusion_setting = SettingValue()
-        subcategory_setting = SubcategorySetting(
-            subcategory=subcategory, inclusion_setting=inclusion_setting
-        )
+        subcategory_setting = SubcategorySetting(subcategory=subcategory, inclusion_setting=inclusion_setting)
         policy = AuditPolicy(settings=[subcategory_setting])
-        self.assertEqual(
-            policy.settings[0].subcategory.id, "{00000000-0000-0000-0000-000000000000}"
-        )
+        self.assertEqual(policy.settings[0].subcategory.id, "{00000000-0000-0000-0000-000000000000}")
 
     def test_invalid_settings_element_type(self):
         with self.assertRaises(TypeError):
             AuditPolicy(settings=[None])
 
     def test_from_csv_subcategory_setting(self):
-        header = "Machine Name,Policy Target,Subcategory,Subcategory GUID,Inclusion Setting,Exclusion Setting,Setting Value"
+        header = (
+            "Machine Name,Policy Target,Subcategory,Subcategory GUID,Inclusion Setting,Exclusion Setting,Setting Value"
+        )
         policy = AuditPolicy.from_csv(
             [
                 header,
@@ -50,15 +47,15 @@ class TestAuditPolicy(TestCase):
         self.assertIsInstance(policy.settings[0], SubcategorySetting)
 
     def test_from_csv_audit_option(self):
-        header = "Machine Name,Policy Target,Subcategory,Subcategory GUID,Inclusion Setting,Exclusion Setting,Setting Value"
-        policy = AuditPolicy.from_csv(
-            [header, ",,Option:CrashOnAuditFail,,Disabled,,0"]
+        header = (
+            "Machine Name,Policy Target,Subcategory,Subcategory GUID,Inclusion Setting,Exclusion Setting,Setting Value"
         )
+        policy = AuditPolicy.from_csv([header, ",,Option:CrashOnAuditFail,,Disabled,,0"])
         self.assertIsInstance(policy.settings[0], AuditOption)
 
     def test_from_csv_global_object_access_audit_setting(self):
-        header = "Machine Name,Policy Target,Subcategory,Subcategory GUID,Inclusion Setting,Exclusion Setting,Setting Value"
-        policy = AuditPolicy.from_csv(
-            [header, ",,RegistryGlobalSacl,,,,S:(AU;SA;FA;;;WD)"]
+        header = (
+            "Machine Name,Policy Target,Subcategory,Subcategory GUID,Inclusion Setting,Exclusion Setting,Setting Value"
         )
+        policy = AuditPolicy.from_csv([header, ",,RegistryGlobalSacl,,,,S:(AU;SA;FA;;;WD)"])
         self.assertIsInstance(policy.settings[0], GlobalObjectAccessAuditSetting)

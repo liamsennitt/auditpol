@@ -90,9 +90,7 @@ class SubcategorySetting(_Setting):
         if isinstance(inclusion_setting, SettingValue):
             self._inclusion_setting = inclusion_setting
         else:
-            raise TypeError(
-                f"invalid type for inclusion_setting: {type(inclusion_setting)}"
-            )
+            raise TypeError(f"invalid type for inclusion_setting: {type(inclusion_setting)}")
 
     @property
     def value(self):
@@ -176,9 +174,7 @@ class AuditOption(_Setting):
         machine_name, _, option, _, _, _, value = row.split(",")
         _, type = option.split(":")
 
-        return cls(
-            machine_name=machine_name, type=type, value=OptionValue.from_value(value)
-        )
+        return cls(machine_name=machine_name, type=type, value=OptionValue.from_value(value))
 
     def to_csv(self):
         return f"{self.machine_name},,Option:{self.type},,{str(self.value)},,{int(self.value)}\n"

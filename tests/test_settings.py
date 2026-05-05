@@ -1,13 +1,14 @@
 from unittest import TestCase
-from auditpol.subcategories import Subcategory
+
 from auditpol.settings import (
-    _Setting,
-    SettingValue,
-    SubcategorySetting,
-    OptionValue,
     AuditOption,
     GlobalObjectAccessAuditSetting,
+    OptionValue,
+    SettingValue,
+    SubcategorySetting,
+    _Setting,
 )
+from auditpol.subcategories import Subcategory
 
 
 class TestSetting(TestCase):
@@ -112,16 +113,10 @@ class TestSettingValue(TestCase):
 
 class TestSubcategorySetting(TestCase):
     def test_valid_subcategory(self):
-        subcategory = Subcategory(
-            id="{00000000-0000-0000-0000-000000000000}", name="Example"
-        )
+        subcategory = Subcategory(id="{00000000-0000-0000-0000-000000000000}", name="Example")
         inclusion_setting = SettingValue()
-        subcategory_setting = SubcategorySetting(
-            subcategory=subcategory, inclusion_setting=inclusion_setting
-        )
-        self.assertEqual(
-            subcategory_setting.subcategory.id, "{00000000-0000-0000-0000-000000000000}"
-        )
+        subcategory_setting = SubcategorySetting(subcategory=subcategory, inclusion_setting=inclusion_setting)
+        self.assertEqual(subcategory_setting.subcategory.id, "{00000000-0000-0000-0000-000000000000}")
 
     def test_invalid_subcategory_type(self):
         inclusion_setting = SettingValue()
@@ -130,61 +125,39 @@ class TestSubcategorySetting(TestCase):
             SubcategorySetting(subcategory=None, inclusion_setting=inclusion_setting)
 
     def test_valid_inclusion_setting(self):
-        subcategory = Subcategory(
-            id="{00000000-0000-0000-0000-000000000000}", name="Example"
-        )
+        subcategory = Subcategory(id="{00000000-0000-0000-0000-000000000000}", name="Example")
         inclusion_setting = SettingValue()
-        subcategory_setting = SubcategorySetting(
-            subcategory=subcategory, inclusion_setting=inclusion_setting
-        )
+        subcategory_setting = SubcategorySetting(subcategory=subcategory, inclusion_setting=inclusion_setting)
         self.assertEqual(subcategory_setting.inclusion_setting.success, False)
 
     def test_invalid_inclusion_setting_type(self):
-        subcategory = Subcategory(
-            id="{00000000-0000-0000-0000-000000000000}", name="Example"
-        )
+        subcategory = Subcategory(id="{00000000-0000-0000-0000-000000000000}", name="Example")
 
         with self.assertRaises(TypeError):
             SubcategorySetting(subcategory=subcategory, inclusion_setting=None)
 
     def test_value_include_no_auditing(self):
-        subcategory = Subcategory(
-            id="{00000000-0000-0000-0000-000000000000}", name="Example"
-        )
+        subcategory = Subcategory(id="{00000000-0000-0000-0000-000000000000}", name="Example")
         inclusion_setting = SettingValue()
-        subcategory_setting = SubcategorySetting(
-            subcategory=subcategory, inclusion_setting=inclusion_setting
-        )
+        subcategory_setting = SubcategorySetting(subcategory=subcategory, inclusion_setting=inclusion_setting)
         self.assertEqual(subcategory_setting.value, 0)
 
     def test_value_include_success(self):
-        subcategory = Subcategory(
-            id="{00000000-0000-0000-0000-000000000000}", name="Example"
-        )
+        subcategory = Subcategory(id="{00000000-0000-0000-0000-000000000000}", name="Example")
         inclusion_setting = SettingValue(success=True)
-        subcategory_setting = SubcategorySetting(
-            subcategory=subcategory, inclusion_setting=inclusion_setting
-        )
+        subcategory_setting = SubcategorySetting(subcategory=subcategory, inclusion_setting=inclusion_setting)
         self.assertEqual(subcategory_setting.value, 1)
 
     def test_value_include_failure(self):
-        subcategory = Subcategory(
-            id="{00000000-0000-0000-0000-000000000000}", name="Example"
-        )
+        subcategory = Subcategory(id="{00000000-0000-0000-0000-000000000000}", name="Example")
         inclusion_setting = SettingValue(failure=True)
-        subcategory_setting = SubcategorySetting(
-            subcategory=subcategory, inclusion_setting=inclusion_setting
-        )
+        subcategory_setting = SubcategorySetting(subcategory=subcategory, inclusion_setting=inclusion_setting)
         self.assertEqual(subcategory_setting.value, 2)
 
     def test_value_include_success_and_failure(self):
-        subcategory = Subcategory(
-            id="{00000000-0000-0000-0000-000000000000}", name="Example"
-        )
+        subcategory = Subcategory(id="{00000000-0000-0000-0000-000000000000}", name="Example")
         inclusion_setting = SettingValue(success=True, failure=True)
-        subcategory_setting = SubcategorySetting(
-            subcategory=subcategory, inclusion_setting=inclusion_setting
-        )
+        subcategory_setting = SubcategorySetting(subcategory=subcategory, inclusion_setting=inclusion_setting)
         self.assertEqual(subcategory_setting.value, 3)
 
     def test_from_csv(self):
@@ -194,13 +167,9 @@ class TestSubcategorySetting(TestCase):
         self.assertIsInstance(subcategory_setting, SubcategorySetting)
 
     def test_to_csv(self):
-        subcategory = Subcategory(
-            id="{00000000-0000-0000-0000-000000000000}", name="Example"
-        )
+        subcategory = Subcategory(id="{00000000-0000-0000-0000-000000000000}", name="Example")
         inclusion_setting = SettingValue()
-        subcategory_setting = SubcategorySetting(
-            subcategory=subcategory, inclusion_setting=inclusion_setting
-        )
+        subcategory_setting = SubcategorySetting(subcategory=subcategory, inclusion_setting=inclusion_setting)
         self.assertEqual(
             subcategory_setting.to_csv(),
             ",System,Example,{00000000-0000-0000-0000-000000000000},No Auditing,,0\n",
@@ -273,9 +242,7 @@ class TestAuditOption(TestCase):
     def test_to_csv(self):
         option_value = OptionValue()
         audit_option = AuditOption(type="CrashOnAuditFail", value=option_value)
-        self.assertEqual(
-            audit_option.to_csv(), ",,Option:CrashOnAuditFail,,Disabled,,0\n"
-        )
+        self.assertEqual(audit_option.to_csv(), ",,Option:CrashOnAuditFail,,Disabled,,0\n")
 
 
 class TestGlobalObjectAccessAuditSetting(TestCase):
@@ -303,9 +270,7 @@ class TestGlobalObjectAccessAuditSetting(TestCase):
         global_object_access_audit_setting = GlobalObjectAccessAuditSetting.from_csv(
             ",,RegistryGlobalSacl,,,,S:(AU;SA;FA;;;WD)\n"
         )
-        self.assertIsInstance(
-            global_object_access_audit_setting, GlobalObjectAccessAuditSetting
-        )
+        self.assertIsInstance(global_object_access_audit_setting, GlobalObjectAccessAuditSetting)
 
     def test_to_csv(self):
         global_object_access_audit_setting = GlobalObjectAccessAuditSetting(

@@ -1,7 +1,7 @@
 from auditpol.settings import (
-    SubcategorySetting,
     AuditOption,
     GlobalObjectAccessAuditSetting,
+    SubcategorySetting,
 )
 
 
@@ -23,9 +23,7 @@ class AuditPolicy:
                 ):
                     pass
                 else:
-                    raise TypeError(
-                        f"invalid type for settings element: {type(setting)}"
-                    )
+                    raise TypeError(f"invalid type for settings element: {type(setting)}")
             self._settings = settings
         else:
             raise TypeError(f"invalid type for settings: {type(settings)}")
@@ -49,7 +47,7 @@ class AuditPolicy:
         return cls(settings=settings)
 
     def to_csv(self):
-        yield "Machine Name,Policy Target,Subcategory,Subcategory GUID,Inclusion Setting,Exclusion Setting,Setting Value\n"
+        yield "Machine Name,Policy Target,Subcategory,Subcategory GUID,Inclusion Setting,Exclusion Setting,Setting Value\n"  # noqa: E501
 
         for setting in self.settings:
             yield setting.to_csv()
